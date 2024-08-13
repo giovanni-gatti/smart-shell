@@ -36,7 +36,7 @@ def _config_server(port: int) -> int:
     config_parser = configparser.ConfigParser()
     config_parser["SERVER"] = {"server_port": port}
     try:
-        with open(CONFIG_FILE_PATH, "w") as config_file: #TODO: add default value
+        with open(CONFIG_FILE_PATH, "w") as config_file:
             config_parser.write(config_file)
     except OSError:
         return WRITE_ERROR
