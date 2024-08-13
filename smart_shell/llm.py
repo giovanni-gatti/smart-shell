@@ -1,17 +1,9 @@
-import configparser
 from pathlib import Path
 import requests
 import json
 from typing import List, Dict
 import typer
-
-DEFAULT_PORT = 8080 # default port for the server
-
-
-def get_server_port(config_file: Path) -> int:
-    config_parser = configparser.ConfigParser()
-    config_parser.read(config_file)
-    return int(config_parser["SERVER"]["server_port"])
+from rich import print as rprint
 
 
 def get_response(

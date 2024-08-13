@@ -1,8 +1,8 @@
 from typing import Optional
-from pathlib import Path
 import typer
 
-from smart_shell import __app_name__, __version__, ERRORS, llm, server_config
+from smart_shell import ERRORS, llm, server_config, utils
+
 
 app = typer.Typer()
 
@@ -10,7 +10,7 @@ app = typer.Typer()
 @app.command()
 def config(
     port: int = typer.Option(
-        str(llm.DEFAULT_PORT),
+        str(server_config.DEFAULT_PORT),
         "--port",
         "-p",
         help= "Port number for the server.",
@@ -27,13 +27,7 @@ def config(
     else:
         typer.secho(f"The server port is: {port}", fg= typer.colors.GREEN)
 
-
-def _version_callback(value: bool) -> None:
-    if value:
-        typer.secho(f"{__app_name__} v{__version__}")
-        raise typer.Exit()
     
-
 @app.command("q")
 def ask(
     question: list[str] = typer.Argument(
@@ -42,7 +36,7 @@ def ask(
 ) -> None:
     """Ask a question to the language model."""
     if server_config.CONFIG_FILE_PATH.exists():
-        server_port = llm.get_server_port(server_config.CONFIG_FILE_PATH)
+        server_port = utils.get_server_port(server_config.CONFIG_FILE_PATH)
     else:
         typer.secho(
             'Config file not found. Please, run "smart_shell config"',
@@ -61,7 +55,7 @@ def main(
         "--version", 
         "-v",
         help= "Show the application version.",
-        callback= _version_callback, 
+        callback= utils._version_callback, 
         is_eager= True),
 ) -> None:
     return

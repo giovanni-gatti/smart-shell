@@ -4,8 +4,12 @@ from pathlib import Path
 
 from smart_shell import __app_name__, WRITE_ERROR, DIR_ERROR, FILE_ERROR, SUCCESS
 
+
 CONFIG_DIR_PATH = Path(typer.get_app_dir(__app_name__))
 CONFIG_FILE_PATH = CONFIG_DIR_PATH / "config.ini"
+
+DEFAULT_PORT = 8080 # default port for the server
+
 
 def config_app(port: int) -> int:
     """Configure the application."""
