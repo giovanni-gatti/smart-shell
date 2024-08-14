@@ -1,9 +1,8 @@
-from pathlib import Path
 import requests
 import json
 from typing import List, Dict
-import typer
 from rich import print as rprint
+import pyperclip
 
 
 def get_response(
@@ -14,6 +13,7 @@ def get_response(
     max_tokens: int = 4096,
     stream: bool = True,
 ) -> str:
+    
     headers = {"Content-Type": "application/json"}
     data = {
         "messages": messages,
@@ -41,8 +41,8 @@ def get_response(
                         delta = json_line["choices"][0].get("delta", {})
                         content_piece = delta.get("content", "")
                         content += content_piece
-                        # print(content_piece, end="", flush=True)
-                        typer.secho(content_piece, fg= typer.colors.YELLOW, nl= False)
+                        if "`" not in content_piece:
+                            rprint(f"[yellow]{content_piece}[/yellow]", end= "", flush= True)
                 except json.JSONDecodeError:
                     continue
         print()
@@ -63,28 +63,33 @@ def start_chatbot(
     top_p: float = 0.9,
     max_tokens: int = 4096,
     stream: bool = True,
-):
-    if question.lower() in ["exit", "quit"]:
-        return
+) -> None:
+    
     messages = [{"role": "system", "content": system_instructions}]
     messages.append({"role": "user", "content": question})
-    typer.secho(f"\nAssistant:", fg= typer.colors.GREEN, bold= True)
-    #print("Assistant: ", end="")
+    rprint(f"[bold magenta]\n> Assistant: [/bold magenta]\n", end= "")
+
     response = get_response(
         server_port, messages, temperature, top_p, max_tokens, stream
     )
     messages.append({"role": "assistant", "content": response})
     
-    # while True:
-    #     prompt = input("User: ")
-    #     if prompt.lower() in ["exit", "quit"]:
-    #         break
-    #     messages.append({"role": "user", "content": prompt})
-    #     print("Assistant: ", end="")
-    #     response = get_response(
-    #         server_port, messages, temperature, top_p, max_tokens, stream
-    #     )
-    #     messages.append({"role": "assistant", "content": response})
+    while True:
+        rprint(f"[bold deep_pink4]\n> User: [/bold deep_pink4]\n", end= "")
+        prompt = input("")
+        if prompt.lower() == "quit": # if the user wants to terminate the chat
+            rprint(f"\n[light_coral]Terminated [bold]smart-shell[/bold] session![/light_coral]")
+            break
+        elif prompt == "": # if the user just presses Enter, copy the last language model response to clipboard
+            pyperclip.copy(messages[-1]["content"].replace("`", "").strip())
+            rprint(f"[light_coral]Command copied to the clipboard![/light_coral]")
+            break
+        messages.append({"role": "user", "content": prompt})
+        rprint(f"[bold magenta]\n> Assistant: [/bold magenta]\n", end= "")
+        response = get_response(
+            server_port, messages, temperature, top_p, max_tokens, stream
+        )
+        messages.append({"role": "assistant", "content": response})
 
 
 

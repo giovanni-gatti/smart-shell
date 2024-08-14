@@ -1,5 +1,6 @@
 from typing import Optional
 import typer
+from rich import print as rprint
 
 from smart_shell import ERRORS, llm, server_config, utils
 
@@ -16,6 +17,7 @@ def config(
         help= "Port number for the server.",
         show_default= True),
 ) -> None:
+    
     """Configure the application."""
     app_config_error = server_config.config_app(port)
     if app_config_error:
@@ -34,6 +36,7 @@ def ask(
         ..., 
         help= "The question to ask the model."),
 ) -> None:
+    
     """Ask a question to the language model."""
     if server_config.CONFIG_FILE_PATH.exists():
         server_port = utils.get_server_port(server_config.CONFIG_FILE_PATH)
@@ -44,8 +47,8 @@ def ask(
         )
         raise typer.Exit(1)
     question = " ".join(question)
-    answer = llm.start_chatbot(server_port, question, system_instructions= "You are a terminal assistant. Turn the natural language instructions into a terminal command. By default always only output code, and in a code block. However, if the user is clearly asking a question then answer it very briefly and well.")
-    typer.secho(answer, fg= typer.colors.YELLOW)
+    rprint(f"[plum4]--- Press [bold]ENTER[/bold] to copy to clipboard & exit, or type [bold]quit[/bold] to terminate the chat. ---[/plum4]\n", end= "")
+    llm.start_chatbot(server_port, question, system_instructions= "You are a terminal assistant. Turn the natural language instructions into a terminal command. By default always only output code, and in a code block. However, if the user is clearly asking a question then answer it very briefly and well.")
  
     
 @app.callback()
@@ -58,4 +61,5 @@ def main(
         callback= utils._version_callback, 
         is_eager= True),
 ) -> None:
+    
     return
