@@ -2,9 +2,11 @@ import requests
 import json
 from typing import List, Dict
 from rich import print as rprint
+from tenacity import retry, wait_random_exponential, stop_after_attempt
 import pyperclip
 
 
+@retry(wait=wait_random_exponential(multiplier=1, max=40), stop=stop_after_attempt(3))
 def get_response(
     server_port: int,
     messages: List[Dict[str, str]],
