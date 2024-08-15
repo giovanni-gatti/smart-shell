@@ -59,4 +59,5 @@ def main(
         callback= utils._version_callback, 
         is_eager= True),
 ) -> None:
+    """--- AI-powered terminal assistant ---"""
     return
