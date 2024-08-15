@@ -16,9 +16,8 @@ def config(
         "-p",
         help= "Port number for the server.",
         show_default= True),
-) -> None:
-    
-    """Configure the application."""
+) -> None: 
+    """Configure the server port application."""
     app_config_error = server_config.config_app(port)
     if app_config_error:
         typer.secho(
@@ -36,7 +35,6 @@ def ask(
         ..., 
         help= "The question to ask the model."),
 ) -> None:
-    
     """Ask a question to the language model."""
     if server_config.CONFIG_FILE_PATH.exists():
         server_port = utils.get_server_port(server_config.CONFIG_FILE_PATH)
@@ -61,5 +59,4 @@ def main(
         callback= utils._version_callback, 
         is_eager= True),
 ) -> None:
-    
     return

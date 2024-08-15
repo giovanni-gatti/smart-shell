@@ -6,7 +6,7 @@ from tenacity import retry, wait_random_exponential, stop_after_attempt
 import pyperclip
 
 
-@retry(wait=wait_random_exponential(multiplier=1, max=40), stop=stop_after_attempt(3))
+@retry(wait=wait_random_exponential(multiplier= 1, max= 40), stop= stop_after_attempt(3))
 def get_response(
     server_port: int,
     messages: List[Dict[str, str]],
@@ -15,7 +15,7 @@ def get_response(
     max_tokens: int = 4096,
     stream: bool = True,
 ) -> str:
-    
+    """Get a response from the local language model running on the server."""
     headers = {"Content-Type": "application/json"}
     data = {
         "messages": messages,
@@ -25,12 +25,17 @@ def get_response(
         "stream": stream,
     }
     # Send POST request to the server
-    response = requests.post(
-        f"http://localhost:{server_port}/v1/chat/completions",
-        headers= headers,
-        data= json.dumps(data),
-        stream= stream,
-    )
+    try:
+        response = requests.post(
+            f"http://localhost:{server_port}/v1/chat/completions",
+            headers= headers,
+            data= json.dumps(data),
+            stream= stream,
+        )
+    except Exception as e:
+        rprint("[red]Unable to get completion from the language model server. Check that the local server port in [bold]smart-shell config --port[/bold] is the same as the one used for the llama.cpp HTTP server.[/red]")
+        rprint(f"[red][bold]Exception:[/bold] {e}[/red]")
+        exit(1)
     response.raise_for_status()
     if stream:
         content = ""
@@ -43,8 +48,7 @@ def get_response(
                         delta = json_line["choices"][0].get("delta", {})
                         content_piece = delta.get("content", "")
                         content += content_piece
-                        if "`" not in content_piece:
-                            rprint(f"[yellow]{content_piece}[/yellow]", end= "", flush= True)
+                        rprint(f"[yellow]{content_piece}[/yellow]", end= "", flush= True)
                 except json.JSONDecodeError:
                     continue
         print()
@@ -66,7 +70,7 @@ def start_chatbot(
     max_tokens: int = 4096,
     stream: bool = True,
 ) -> None:
-    
+    """Start a chat session with the language model."""
     messages = [{"role": "system", "content": system_instructions}]
     messages.append({"role": "user", "content": question})
     rprint(f"[bold magenta]\n> Assistant: [/bold magenta]\n", end= "")
