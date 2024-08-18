@@ -42,7 +42,7 @@ $ pipx install /path/to/your/.whl/file
 ```
 
 ### Model Selection
-**SmartShell** uses the LLaMA.cpp local [HTTP server](https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md) to run inference with open-source LLMs. Install llama.cpp following the instructions [here](https://github.com/ggerganov/llama.cpp).
+**SmartShell** uses the LLaMA.cpp local [HTTP server](https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md) to run inference with open-source LLMs. Install `llama.cpp` following the instructions [here](https://github.com/ggerganov/llama.cpp).
 
 The [Example](#example) section shows how to run the LLama 3 8B Instruct model.
 
