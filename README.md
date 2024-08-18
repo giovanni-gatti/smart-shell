@@ -31,5 +31,20 @@ $ poetry check
 $ poetry install
 ```
 (Make sure the command `check` returns the message `All set!`).
+5. Build the `.whl` file:
+```console
+$ poetry build
+```
+6. Finally, install the package globally:
+```console
+$ pipx install /path/to/your/.whl/file
+```
+
+### Model selection
+**SmartShell** uses the LLaMA.cpp local [HTTP server](https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md) to run inference with open-source LLMs. Install llama.cpp following the instructions [here](https://github.com/ggerganov/llama.cpp).
+
+The Example section shows how to run LLama 3 8B Instruct.
+
+
 
 
