@@ -44,12 +44,50 @@ $ pipx install /path/to/your/.whl/file
 ### Model Selection
 **SmartShell** uses the LLaMA.cpp local [HTTP server](https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md) to run inference with open-source LLMs. Install llama.cpp following the instructions [here](https://github.com/ggerganov/llama.cpp).
 
-The Example section shows how to run the LLama 3 8B Instruct model.
+The [Example](#example) section shows how to run the LLama 3 8B Instruct model.
 
 ### Basic Usage
 Simply type `smart-shell q` followed by your question.
 
-See [this page](smart_shell/README.md) for a complete list of available options and arguments to call the CLI tool.
+See [this page](smart_shell/README.md) for a complete list of available commands to call the CLI tool.
+
+## Example
+This example shows how to set up **SmartShell** with [Meta's LLama 3 8B](https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct) model for demonstration purposes.
+
+1. Navigate to your local `llama.cpp` cloned folder and run:
+```console
+$ python -m pip install -r requirements.txt
+```
+
+2. Download the model:
+```console
+$ huggingface-cli download meta-llama/Meta-Llama-3-8B-Instruct --exclude "original/*"  --local-dir models/Meta-Llama-3-8B-Instruct
+```
+
+3. Convert the model to `.GGUF` format for LLaMA.cpp:
+```console
+$ python convert_hf_to_gguf.py models/Meta-Llama-3-8B-Instruct
+```
+
+4. (Optional) Quantize the model to reduce hardware requirements following the steps [here](https://github.com/ggerganov/llama.cpp/blob/master/examples/quantize/README.md).
+
+5. Start the LLaMA.cpp server:
+```console
+$ ./llama-server -m models/path/to/your/model.gguf --port 8080
+```
+
+6. Configure the local server port:
+```console
+$ smart-shell config <your-local-port-number>
+```
+Make sure that the port number is the same one you used to initialize the server above.
+
+6. Now you are ready to use **SmartShell** with LLama 3 8B!
+Run:
+```console
+$ smart-shell q <your-question>
+```
+
 
 
 
