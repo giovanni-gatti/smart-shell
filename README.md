@@ -82,13 +82,19 @@ $ smart-shell config <your-local-port-number>
 ```
 Make sure that the port number is the same one you used to initialize the server above.
 
-6. Now you are ready to use **SmartShell** with LLama 3 8B!
+7. Now you are ready to use **SmartShell** with LLama 3 8B!
 Run:
 ```console
 $ smart-shell q <your-question>
 ```
 
+## Future Work
+- Add more configuration and customization options, e.g., system prompt.
+- Improve UI and markdown formatting.
 
-
-
+## References
+- [Typer](https://typer.tiangolo.com/tutorial/package/)
+- [Rich](https://rich.readthedocs.io/en/stable/index.html)
+- [LLaMA.cpp](https://github.com/ggerganov/llama.cpp)
+- [HuggingFace](https://huggingface.co/models)
 
